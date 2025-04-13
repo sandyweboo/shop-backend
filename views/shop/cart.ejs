@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cart</title>
+  </head>
+ 
+  <body>
+    <%- include('../includes/navbar.ejs') %>
+    <h1>Your Cart</h1>
+   
+    <% if (cart.product.length > 0) { %>
+      <table border="1" cellspacing="0" cellpadding="10">
+        <thead>
+          <tr>
+            <th>Product ID</th>
+            <th>Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% cart.product.forEach(prod => { %>
+            <tr>
+              <td><%= prod.id %></td>
+              <td><%= prod.qty %></td>
+              <td>
+                <form action="/cart/delete" method="POST">
+                  <input type="hidden" name="productId" value="<%= prod.id %>" />
+                  <input type="hidden" name="productPrice" value="<%= prod.price || 0 %>" />
+                  <button type="submit">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <p><strong>Total Price: </strong>$<%= cart.totalPrice %></p>
+    <% } else { %>
+      <p>Your cart is empty.</p>
+    <% } %>
+  </body>
+</html>
