@@ -1,7 +1,9 @@
 const Product = require('../models/product')
 
 exports.getAddProduct = (req, res, next) => {
-    res.render('admin/edit-Product')
+    res.render('admin/edit-Product',{
+        editing: false
+    })
 }
 
 
@@ -22,6 +24,7 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect('/');
   }
   const prodId = req.params.productId;
+  //console.log(prodId)
   Product.findById(prodId, product => {
     if (!product) {
       return res.redirect('/');
@@ -32,7 +35,7 @@ exports.getEditProduct = (req, res, next) => {
       editing: editMode,
       product: product
     });
-  });
+ });
 
 } 
 
@@ -42,3 +45,18 @@ exports.getProduct = (req, res, next) =>{
     })
 }
 
+exports.postEditProduct = (req, res, next) => {
+    const prodId = req.body.productId;
+    const updatedTitle = req.body.title;
+    const updatedPrice = req.body.price;
+    const updatedImageUrl = req.body.imageUrl;
+
+    const updatedProduct = new Product(
+      prodId,
+      updatedTitle,
+      updatedImageUrl,
+      updatedPrice
+    );
+    updatedProduct.save();
+    res.redirect('/');
+  };
