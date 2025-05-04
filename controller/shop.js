@@ -22,7 +22,7 @@ exports.postAddCart = (req, res, next) => {
     const id = req.body.productId;
     const producPrice = req.body.productPrice;
     Cart.addProduct(id, producPrice);
-res.redirect('/cart/view'); 
+    res.redirect('/cart/view');
 };
 
 exports.getCart = (req, res, next) => {
@@ -33,9 +33,11 @@ exports.getCart = (req, res, next) => {
 
 exports.postDeleteCart = (req, res, next) => {
     const id = req.body.productId;
-    const producPrice = req.body.productPrice;
-    Cart.deleteProduct(id, producPrice);
+   Product.findById(id, product =>{
+    Cart.deleteCartProduct(id, product.Price);
+    res.redirect('/cart/view');
+   }
 
-  
-    res.redirect('/cart/view'); 
+   )
+   
 };
