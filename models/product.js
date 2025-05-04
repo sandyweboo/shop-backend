@@ -27,39 +27,41 @@ module.exports = class Product {
 
 
     save() {
-        getProductData((products => {
-            if(this.id){
-                const existingProduct = products.findIndex(prod => prod.id === this.id);
-                if(existingProduct === -1){
-                    products.push(this)
-                    const data = JSON.stringify(products);
-              fs.writeFile(p, data,(err)=>{
-                if(err){
-                    console.log(err)
-                }else{
-                    console.log('successfully saved')
-                }
-              })
-              
-                }else{
-                  
-                    console.log('product already exist')
-                }
+        getProductData((products) => {
+            if (this.id) {
+                const existingProductIndex = products.findIndex(
+                    prod => String(prod.id) === String(this.id)
+                );
+                const updatedProducts = [...products];
+                updatedProducts[existingProductIndex] = this;
+
+                fs.writeFile(p, JSON.stringify(updatedProducts), err => {
+                    if (err) console.log(err);
+                });
+            } else {
+                //console.log("passs")
+
+                this.id = Math.floor(Math.random() * 1e10);
+                products.push(this)
+                fs.writeFile(p, JSON.stringify(products), err => {
+                    if (err) console.log(err);
+                });
             }
-        }))
+        });
     }
 
-static fetchAll(cb){
-    getProductData(cb);
-}
 
-static findById(id, cb){
-getProductData((products)=>{
-    const product = products.find(prod => prod.id == id)
-cb(product);
+    static fetchAll(cb) {
+        getProductData(cb);
+    }
 
-})
-}
+    static findById(id, cb) {
+        getProductData((products) => {
+            const product = products.find(prod => prod.id == id)
+            cb(product);
+
+        })
+    }
 
 }
 
